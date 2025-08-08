@@ -1,0 +1,19 @@
+server:
+  port: 8082
+
+spring:
+  #  configuracao do banco
+  datasource:
+    url: jdbc:postgresql://localhost:5433/ead-course
+    username: postgres
+    password: 1234567
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # cria as tabelas automaticamente no banco
+      dialect: org.hibernate.dialect.PostgreSQLDialect  # dialeto do postgres
+      jdbc:
+        lob.non-contextual-creation: true # evita logs de erro (devido consultas do hibernate a metadados do banco)
+    properties:
+      hibernate:
+        show_sql: true # mostra as consultas no log
