@@ -4,11 +4,13 @@ import com.ead.course.enums.CourseLevel;
 import com.ead.course.enums.CourseStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -49,5 +51,9 @@ public class CourseModel implements Serializable {
 
     @Column(nullable = false)
     private UUID userInstructor;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Ocultar o campo quando for get
+    @OneToMany(mappedBy = "course") // Um curso pode ter vários módulos
+    private Set<ModuleModel> modules; // Deve-se sempre utilizar o set para mapear as relações
 
 }
