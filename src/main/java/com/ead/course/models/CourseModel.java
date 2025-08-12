@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -53,7 +55,8 @@ public class CourseModel implements Serializable {
     private UUID userInstructor;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Ocultar o campo quando for get
-    @OneToMany(mappedBy = "course") // Um curso pode ter vários módulos
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY) // Lazy - Não Carrega os módulos (teriamos que usar EntityGraph se quisermos os módulos)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<ModuleModel> modules; // Deve-se sempre utilizar o set para mapear as relações
 
 }

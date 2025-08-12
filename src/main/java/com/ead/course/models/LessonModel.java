@@ -35,7 +35,7 @@ public class LessonModel implements Serializable {
     private LocalDateTime creationDate;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Ocultar o campo quando for get
-    @ManyToOne(optional = false) // Uma lição está vinculada a um modulo
+    @ManyToOne(optional = false, fetch = FetchType.LAZY) // Uma lição está vinculada a um modulo
     private ModuleModel module;
 
 }
