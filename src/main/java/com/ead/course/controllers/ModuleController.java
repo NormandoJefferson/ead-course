@@ -5,8 +5,13 @@ import com.ead.course.models.CourseModel;
 import com.ead.course.models.ModuleModel;
 import com.ead.course.services.CourseService;
 import com.ead.course.services.ModuleService;
+import com.ead.course.specification.SpecificationTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -70,11 +74,6 @@ public class ModuleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(moduleService.save(moduleModel));
     }
 
-    @GetMapping("/courses/{courseId}/modules")
-    public ResponseEntity<List<ModuleModel>> getAllModules(@PathVariable(value = "courseId") UUID courseId) {
-        return ResponseEntity.status(HttpStatus.OK).body(moduleService.findAllByCourse(courseId));
-    }
-
     @GetMapping("courses/{courseId}/modules/{moduleId}")
     public ResponseEntity<Object> getOneModule(
             @PathVariable(value = "courseId") UUID courseId,
@@ -84,6 +83,16 @@ public class ModuleController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Module not found for this course.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(moduleModelOptional.get());
+    }
+
+    @GetMapping("/courses/{courseId}/modules")
+    public ResponseEntity<Page<ModuleModel>> getAllModules(
+            @PathVariable(value = "courseId") UUID courseId,
+            SpecificationTemplate.ModuleSpec moduleSpec,
+            @PageableDefault(page = 0, size = 10, sort = "moduleId", direction= Sort.Direction.ASC) Pageable pageable) {
+        Page<ModuleModel> moduleModelPage = moduleService.findAllByCourse(
+                SpecificationTemplate.moduleCourseId(courseId).and(moduleSpec), pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(moduleModelPage);
     }
 
 }
