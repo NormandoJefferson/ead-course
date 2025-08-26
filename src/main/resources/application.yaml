@@ -17,3 +17,11 @@ spring:
     properties:
       hibernate:
         show_sql: true # mostra as consultas no log
+
+# configuração de logs
+logging:
+  level:
+    com.ead: TRACE
+    root: INFO
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
