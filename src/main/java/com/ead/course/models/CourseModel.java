@@ -63,4 +63,9 @@ public class CourseModel implements Serializable {
     @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private Set<CourseUserModel> coursesUsers;
 
+    // O banco gera o id automaticamente (por isso passamos null), e o this faz referência ao CourseModel
+    public CourseUserModel convertToCourseUserModel(UUID userId) {
+        return new CourseUserModel(null, userId, this);
+    }
+
 }
