@@ -10,7 +10,6 @@ import com.ead.course.services.CourseService;
 import com.ead.course.services.CourseUserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -38,9 +37,16 @@ public class CourseUserController {
     AuthUserClient authUserClient;
 
     @GetMapping("/courses/{courseId}/users")
-    public ResponseEntity<Page<UserDto>> getAllUsersByCourse(
+    public ResponseEntity<Object> getAllUsersByCourse(
             @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
             @PathVariable(value = "courseId") UUID courseId) {
+
+        // Verificar se o curso existe antes de faze a busca em authuser
+        Optional<CourseModel> courseModelOptional = courseService.findById(courseId);
+        if(!courseModelOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course Not Found.");
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(authUserClient.getAllUsersByCourse(courseId, pageable));
     }
 
