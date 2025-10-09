@@ -33,7 +33,7 @@ logging:
 ead:
   api:
     url:
-      authuser: 'http://ead-authuser-service' # nome do servico de authuser
+      authuser: 'http://ead-authuser-service/ead-authuser' # nome do servico de authuser e o seu context path
 
 eureka:
   client:
